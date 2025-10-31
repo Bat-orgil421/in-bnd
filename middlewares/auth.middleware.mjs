@@ -10,7 +10,7 @@ export const authMiddleware = async (req, res, next) => {
 
   let user = null;
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const payload = jwt.verify(token, process.env.JWT_SEC);
     const id = payload.id;
     user = await UserModel.findById(id);
 

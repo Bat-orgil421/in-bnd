@@ -4,6 +4,7 @@ import { nanoid } from "nanoid";
 const UserSchema = new mongoose.Schema(
   {
     _id: { type: String, default: nanoid() },
+    profileimg: { type: String },
     username: { type: String, required: true },
     fullname: { type: String, required: true },
     email: { type: String },
@@ -15,11 +16,28 @@ const UserSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+UserSchema.virtual("profiles", {
+  ref: "Profiles",
+  localField: "_id",
+  foreignField: "createdBy",
+});
 
 UserSchema.virtual("posts", {
   ref: "Post",
   localField: "_id",
   foreignField: "createdBy",
+});
+
+UserSchema.virtual("followings", {
+  ref: "UserFollow",
+  localField: "_id",
+  foreignField: "createdBy",
+});
+
+UserSchema.virtual("followers", {
+  ref: "UserFollow",
+  localField: "_id",
+  foreignField: "user",
 });
 
 UserSchema.set("toObject", { virtuals: true });

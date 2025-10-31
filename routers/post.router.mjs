@@ -4,6 +4,7 @@ import { PostCommentModel } from "../models/post-comment.model.mjs";
 import { PostLikeModel } from "../models/post-like.model.mjs";
 import { nanoid } from "nanoid";
 import { authMiddleware } from "../middlewares/auth.middleware.mjs";
+import { ProfiletModel } from "../models/profile.model.mjs";
 
 const router = express.Router();
 
@@ -51,15 +52,32 @@ router.post("/", authMiddleware, async (req, res) => {
     return res.status(400).send({ message: "description required!" });
   }
   if (!imageUrl) {
-    return res.status(400).send({ message: "imageUrl required!" });
+    return res.status(402).send({ message: "imageUrl required!" });
   }
   const post = await PostModel.create({
     _id: nanoid(),
     description,
     imageUrl,
-    createdBy: req.req.user._id,
+    createdBy: req.user._id,
   });
   return res.send({ message: "Post created successfully", body: post });
+});
+
+router.post("/:userId/profile", authMiddleware, async (req, res) => {
+  if (!req.body) {
+    return res.status(400).send({ message: "Body required!" });
+  }
+  const { profileimg } = req.body;
+
+  if (!profileimg) {
+    return res.status(402).send({ message: "profileimg required!" });
+  }
+  const Profiles = await ProfiletModel.create({
+    _id: nanoid(),
+    profileimg,
+    createdBy: req.user._id,
+  });
+  return res.send({ message: "successfully uploaded picture", body: Profiles });
 });
 
 router.delete("/:id", async (req, res) => {

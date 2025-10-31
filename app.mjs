@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 
 import PostRouter from "./routers/post.router.mjs";
 import AuthRouter from "./routers/auth.router.mjs";
+import UserRouter from "./routers/user.routher.mjs";
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/posts", PostRouter);
+app.use("/users", UserRouter);
 
 app.use(AuthRouter);
 
