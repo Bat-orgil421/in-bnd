@@ -10,7 +10,7 @@ import UserRouter from "./routers/user.routher.mjs";
 
 dotenv.config();
 
-const PORT = 3100;
+const PORT = process.env.PORT || 3100;
 
 const app = express();
 

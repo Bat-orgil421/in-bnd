@@ -63,23 +63,6 @@ router.post("/", authMiddleware, async (req, res) => {
   return res.send({ message: "Post created successfully", body: post });
 });
 
-router.post("/:userId/profile", authMiddleware, async (req, res) => {
-  if (!req.body) {
-    return res.status(400).send({ message: "Body required!" });
-  }
-  const { profileimg } = req.body;
-
-  if (!profileimg) {
-    return res.status(402).send({ message: "profileimg required!" });
-  }
-  const Profiles = await ProfiletModel.create({
-    _id: nanoid(),
-    profileimg,
-    createdBy: req.user._id,
-  });
-  return res.send({ message: "successfully uploaded picture", body: Profiles });
-});
-
 router.delete("/:id", async (req, res) => {
   const postId = req.params.id;
   const post = await PostModel.findById(postId);
