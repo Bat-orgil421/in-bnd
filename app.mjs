@@ -6,11 +6,11 @@ import dotenv from "dotenv";
 
 import PostRouter from "./routers/post.router.mjs";
 import AuthRouter from "./routers/auth.router.mjs";
-import UserRouter from "./routers/user.routher.mjs";
+import UserRouter from "./routers/user.router.mjs";
 
 dotenv.config();
 
-const PORT = process.env.PORT || 3100;
+const PORT = process.env.PORT || 5500;
 
 const app = express();
 
@@ -22,12 +22,44 @@ app.get("/", (req, res) => {
   res.send("Hi server");
 });
 
+app.get("/health", (req, res) => {
+  const healthStatus = {
+    status: "OK",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || "development",
+    database:
+      mongoose.connection.readyState === 1 ? "connected" : "disconnected",
+  };
+  res.status(200).json(healthStatus);
+});
+
 app.use("/posts", PostRouter);
 app.use("/users", UserRouter);
 
 app.use(AuthRouter);
 
+// MongoDB connection with error handling
+mongoose
+  .connect(process.env.MONGO_URL)
+  .then(() => {
+    console.log("Connected to MongoDB successfully");
+  })
+  .catch((error) => {
+    console.error("MongoDB connection error:", error);
+    process.exit(1);
+  });
+
+// Handle MongoDB connection events
+mongoose.connection.on("disconnected", () => {
+  console.warn("MongoDB disconnected");
+});
+
+mongoose.connection.on("error", (error) => {
+  console.error("MongoDB error:", error);
+});
+
 app.listen(PORT, () => {
-  mongoose.connect(process.env.MONGO_URL);
   console.log(`Your app is running on http://localhost:${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
 });

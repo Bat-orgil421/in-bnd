@@ -4,7 +4,7 @@ import { nanoid } from "nanoid";
 const ProfileSchema = new mongoose.Schema(
   {
     _id: { type: String, default: nanoid() },
-    profileimg: { type: String },
+    profileim: { type: String },
     createdBy: { type: String, ref: "User" },
     createdAt: { type: Date },
     updatedAt: { type: Date },
