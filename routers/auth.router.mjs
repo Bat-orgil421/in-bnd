@@ -19,7 +19,7 @@ router.post("/signup", async (req, res) => {
     return res.status(400).send({ message: "Password required" });
   }
   if (!body.fullname) {
-    return res.status(400).send({ message: "Fullname required" });
+    return res.status(400).send({ message: "Fullname required" }); 
   }
   if (!body.username) {
     return res.status(400).send({ message: "Username required" });
@@ -129,7 +129,7 @@ router.post("/signin", async (req, res) => {
     return res.status(400).send({ message: "Wrong password!" });
   }
   const token = jwt.sign({ id: user._id }, process.env.JWT_SEC, {
-    expiresIn: "4h",
+    
   });
 
   return res.send({ message: "You are signed in", body: token });
